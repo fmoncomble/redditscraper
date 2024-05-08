@@ -1,3 +1,5 @@
+![redditscraper_banner](https://github.com/fmoncomble/redditscraper/assets/59739627/41697339-9b63-48e2-a2ab-e9d0c39baeb1)
+
 [(Version française)](https://fmoncomble.github.io/redditscraper/README_fr.html)
 
 An extension for extracting and downloading Reddit posts for text mining and analysis.  
