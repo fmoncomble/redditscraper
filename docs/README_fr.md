@@ -1,3 +1,5 @@
+![redditscraper_banner](https://github.com/fmoncomble/redditscraper/assets/59739627/41697339-9b63-48e2-a2ab-e9d0c39baeb1)
+
 [(English version)](https://fmoncomble.github.io/redditscraper)
 
 Une extension pour extraire et télécharger des posts Reddit à des fins de fouille textuelle.  
