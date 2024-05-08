@@ -194,6 +194,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         secretContainer.style.display = 'block';
         openRedditP.style.display = 'block';
         authBtnContainer.style.display = 'block';
+        searchFold.style.display = 'none';
+        searchUnfold.style.display = 'block';
         allDone.style.display = 'none';
         searchContainer.style.display = 'none';
         // location.reload();
@@ -283,23 +285,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Function to handle refresh token
     async function saveRefreshToken() {
-        chrome.storage.local.set(
-            { redditrefreshtoken: refreshToken },
-            function () {
-                console.log('Refresh token saved: ', refreshToken);
-            }
-        );
+        chrome.storage.local.set({ redditrefreshtoken: refreshToken });
     }
 
     // Function to revoke user token
     async function removeUserToken() {
         const params = `token=${refreshToken}`;
-        console.log('Revoke auth parameters: ', params);
 
         const url = 'https://www.reddit.com/api/v1/revoke_token';
         const encodedCreds =
             'Basic ' + window.btoa(clientID + ':' + clientSecret);
-        console.log('Encoded credentials = ', encodedCreds);
 
         try {
             const response = await fetch(url, {
@@ -313,13 +308,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: params,
             });
 
-            console.log('Auth response: ', response);
-
             if (!response.ok) {
                 window.alert('There was an error during revocation');
                 throw new Error('Network response was not ok');
             } else {
-                console.log('Token successfully revoked');
+                window.alert('Authorization successfully revoked');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -342,7 +335,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 button.style.borderColor = '#4a905f';
                 button.textContent = 'Saved';
                 input.placeholder = 'Value stored: enter new value to reset';
-                console.log(credType + ' saved: ' + credential);
                 input.value = '';
                 setTimeout(() => {
                     button.removeAttribute('style');
@@ -356,7 +348,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 button.style.borderColor = '#4a905f';
                 button.textContent = 'Value reset';
                 input.value = '';
-                console.log(credType + ' reset.');
                 input.placeholder = placeholder;
                 setTimeout(() => {
                     button.removeAttribute('style');
@@ -370,7 +361,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     async function getCode() {
         clientID = await retrieveCredential('reddit_client_id');
         clientSecret = await retrieveCredential('reddit_client_secret');
-        console.log('Getting auth code');
 
         return new Promise((resolve) => {
             if (!clientID || !clientSecret) {
@@ -392,7 +382,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             const randomString = generateRandomString(12);
-            console.log('State = ', randomString);
 
             const codeUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientID}&response_type=code&state=${randomString}&redirect_uri=https://localhost:8080&duration=permanent&scope=read`;
 
@@ -409,7 +398,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                     changeInfo.status === 'complete' &&
                     tab.url.startsWith(tabUrl)
                 ) {
-                    console.log('tab detected');
                     const url = tab.url;
                     const clientCode = url.split('code=')[1].split('#_')[0];
                     codeInput.value = clientCode;
@@ -419,7 +407,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                         codeSaveBtn,
                         codePlaceholder
                     );
-                    console.log('Code = ', clientCode);
                     chrome.tabs.remove(tabId);
                     authorize();
                 }
@@ -429,25 +416,21 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     authBtn.addEventListener('click', async () => {
-        console.log('Auth button clicked');
         await getCode();
     });
 
     // Function to obtain user token
     async function authorize() {
-        console.log('Retrieving token');
         clientID = await retrieveCredential('reddit_client_id');
         clientSecret = await retrieveCredential('reddit_client_secret');
         let clientCode = await retrieveCredential('reddit_client_code');
 
         // Build query
         const params = `grant_type=authorization_code&code=${clientCode}&redirect_uri=https://localhost:8080`;
-        console.log('Auth parameters: ', params);
 
         const url = 'https://www.reddit.com/api/v1/access_token';
         const encodedCreds =
             'Basic ' + window.btoa(clientID + ':' + clientSecret);
-        console.log('Encoded credentials = ', encodedCreds);
 
         try {
             const response = await fetch(url, {
@@ -461,22 +444,16 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: params,
             });
 
-            console.log('Auth response: ', response);
-
             if (!response.ok) {
                 window.alert('There was an error during authorization');
                 throw new Error('Network response was not ok');
             }
 
             const jsonData = await response.json();
-            console.log('Auth data = ', jsonData);
             accessToken = jsonData.access_token;
             if (accessToken) {
                 userToken = accessToken;
                 refreshToken = jsonData.refresh_token;
-                console.log(
-                    'Tokens generated: ' + userToken + ' ' + refreshToken
-                );
                 await saveUserToken();
                 await saveRefreshToken();
                 instSpan.style.display = 'none';
@@ -496,9 +473,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Function to refresh user token
     async function renewToken() {
-        console.log('Renewing user token');
         refreshToken = await retrieveCredential('redditrefreshtoken');
-        console.log('Refresh token = ', refreshToken);
 
         // Build query
         const params = `grant_type=refresh_token&refresh_token=${refreshToken}`;
@@ -519,19 +494,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: params,
             });
 
-            console.log('Auth response: ', response);
-
             if (!response.ok) {
                 window.alert('There was an error during authorization');
                 throw new Error('Network response was not ok');
             }
 
             const jsonData = await response.json();
-            console.log('Auth data = ', jsonData);
             accessToken = jsonData.access_token;
             if (accessToken) {
                 userToken = accessToken;
-                console.log('New user token: ', userToken);
                 await saveUserToken();
                 openRedditP.style.display = 'none';
                 idContainer.style.display = 'none';
@@ -557,17 +528,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Logic to build query URL from inputs
-    let queryUrl = 'https://oauth.reddit.com/';
     let type = 'link';
     typeSelect.addEventListener('change', () => {
         type = typeSelect.value;
-        console.log('Type changed: ', type);
     });
     let sortBy = 'new';
     timeRangeSelect.disabled = true;
     sortBySelect.addEventListener('change', () => {
         sortBy = sortBySelect.value;
-        console.log('Sort order changed: ', sortBy);
         if (sortBy === 'new' || sortBy === 'hot') {
             timeRangeSelect.disabled = true;
         } else {
@@ -577,7 +545,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     let timeRange = 'all';
     timeRangeSelect.addEventListener('change', () => {
         timeRange = timeRangeSelect.value;
-        console.log('Time range changed: ', timeRange);
     });
 
     async function checkSubreddit(sub) {
@@ -591,11 +558,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 scope: 'read',
             },
         });
-        console.log('subreddit check response = ', response);
         let exist;
         if (response.ok) {
             const data = await response.json();
-            console.log('subreddit check data = ', data);
             const names = data.names;
             if (names.length > 0) {
                 exist = true;
@@ -603,11 +568,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         } else if (!response.ok) {
             exist = false;
         }
-        console.log('Exist? ', exist);
         return exist;
     }
 
+    let queryUrl;
+
     async function buildQueryUrl() {
+        queryUrl = 'https://oauth.reddit.com/';
+
         // Concatenate query URL from search elements
         let keywords = keywordsInput.value.replaceAll(' ', ' AND ');
         let thisPhrase = thisPhraseInput.value;
@@ -650,7 +618,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
             userToken = await retrieveCredential('redditusertoken');
-            console.log('User token = ', userToken);
             const response = await fetch(queryUrl, {
                 method: 'GET',
                 headers: {
@@ -658,9 +625,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                     scope: 'read',
                 },
             });
-            console.log('Search response = ', response);
             if (userToken && response.status === 401) {
-                renewToken();
+                await renewToken();
+                buildQueryUrl();
             } else if (response.status === 401) {
                 searchMsg.style.display = 'none';
                 window.alert(
@@ -669,24 +636,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                 authContainer.style.display = 'block';
                 authFold.style.display = 'block';
                 authUnfold.style.display = 'none';
-                queryUrl = 'https://oauth.reddit.com/';
                 throw new Error('User needs to authorize app');
             } else if (!response || !response.ok) {
                 window.alert(
                     `Error fetching results: status ${response.status}`
                 );
                 searchMsg.style.display = 'none';
-                queryUrl = 'https://oauth.reddit.com/';
                 throw new Error('Could not fetch search results.');
             }
             const searchData = await response.json();
-            console.log('Search response data = ', searchData);
             const searchResults = searchData.data.children;
-            console.log('Number of results = ', searchResults.length);
             if (searchResults.length == 0) {
                 searchMsg.style.display = 'none';
                 noResult.style.display = 'block';
-                queryUrl = 'https://oauth.reddit.com/';
             } else {
                 searchMsg.style.display = 'none';
                 searchContainer.style.display = 'none';
@@ -814,7 +776,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 } else if (p > 1 && after) {
                     nextQueryUrl = queryUrl + '&after=' + after.toString();
                 } else if (!after) {
-                    console.log('No after parameter, trying by ID');
                     let kind;
                     if (type === 'link') {
                         kind = 't3_';
@@ -825,7 +786,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                     }
                     nextQueryUrl = queryUrl + '&after=' + kind + id.toString();
                 }
-                console.log(`Extracting page ${p}, URL = ${nextQueryUrl}`);
                 const response = await fetch(nextQueryUrl, {
                     headers: {
                         Authorization: `bearer ${userToken}`,
@@ -849,9 +809,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
                 const data = await response.json();
                 after = data.data.after;
-                console.log('After: ', after);
                 results = data.data.children;
-                console.log('Results array: ', results);
                 if (
                     results.length == 0 ||
                     (resultCount > 1 && results.length <= 1)
@@ -861,33 +819,27 @@ document.addEventListener('DOMContentLoaded', async function () {
                 for (r of results) {
                     const parser = new DOMParser();
                     id = r.data.id;
-                    console.log('Result ID = ', id);
                     if (resultSet.has(id)) {
-                        console.log('Result already extracted, aborting');
                         abort = true;
                         return;
                     }
                     resultSet.add(id);
 
                     title = r.data.title;
-                    console.log('title = ', title);
 
                     username = r.data.author;
-                    console.log('Result author = ', username);
 
                     date = r.data.created;
                     date = new Date(date * 1000);
                     date = date.toISOString();
-                    date = date.split('T')[0];
-                    console.log('Result date = ', date);
+                    dateElements = date.split('T');
+                    date = dateElements[0];
+                    time = dateElements[1].split('.')[0];
                     text = r.data.selftext;
                     if (!text) {
-                        console.log('No text found, moving on');
                         continue;
                     }
-                    console.log('Result text = ', text);
                     url = 'https://www.reddit.com' + r.data.permalink;
-                    console.log('Result URL = ', url);
 
                     if (fileFormat === 'xml') {
                         username = username
@@ -924,7 +876,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         file =
                             file +
                             `<lb></lb><lb></lb>
-<result id="${id}" username="${username}" date="${date}" title="${title}"><lb></lb>
+<result id="${id}" username="${username}" date="${date}" time="${time}" title="${title}"><lb></lb>
 <ref target="${url}">${url}</ref><lb></lb><lb></lb>
 ${text}
 </result>
@@ -935,11 +887,19 @@ ${text}
                         file[id] = {
                             username: `${username}`,
                             date: `${date}`,
+                            time: `${time}`,
                             text: `${text}`,
                         };
                     } else if (fileFormat === 'csv') {
                         text = text.replaceAll('\n', ' ');
-                        csvData.push({ username, date, url, title, text });
+                        csvData.push({
+                            username,
+                            date,
+                            time,
+                            url,
+                            title,
+                            text,
+                        });
                     }
                     if (maxResults !== Infinity) {
                         let resultPercent = Math.round(
@@ -955,11 +915,6 @@ ${text}
                     }
                 }
                 p++;
-                // if (!after) {
-                //     console.log('No after parameter');
-                //     abort = true;
-                //     return;
-                // }
             } catch (error) {
                 console.error(error);
             }

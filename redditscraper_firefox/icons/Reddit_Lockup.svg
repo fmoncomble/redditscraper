@@ -15,7 +15,10 @@
    sodipodi:docname="Reddit_Lockup.svg"
    width="1405.3545"
    height="217.0755"
-   inkscape:version="1.0.2 (e86c8708, 2021-01-15)">
+   inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
+   inkscape:export-filename="/Users/florent/Downloads/redditscraper_banner.png"
+   inkscape:export-xdpi="18.99"
+   inkscape:export-ydpi="18.99">
   <metadata
      id="metadata955">
     <rdf:RDF>
@@ -24,7 +27,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,7 +40,7 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1872"
+     inkscape:window-width="1686"
      inkscape:window-height="1027"
      id="namedview953"
      showgrid="false"
@@ -48,12 +51,13 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="0.86191623"
-     inkscape:cx="718.16724"
+     inkscape:cx="440.29801"
      inkscape:cy="108.53775"
-     inkscape:window-x="0"
+     inkscape:window-x="234"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="Layer_1">
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0">
     <sodipodi:guide
        position="1446.7173,457.15305"
        orientation="0,-1"
