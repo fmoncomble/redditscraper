@@ -4,7 +4,7 @@
     "version": "0.1",
     "description": "A browser extension to scrape Reddit search results",
     "homepage_url": "https://fmoncomble.github.io/redditscraper/",
-    "permissions": ["storage", "clipboardWrite", "<all_urls>"],
+    "permissions": ["storage", "clipboardWrite", "*://localhost/", "*://*.reddit.com/*"],
     "icons": {
         "48": "icons/icon-48.png",
         "96": "icons/icon-96.png"
