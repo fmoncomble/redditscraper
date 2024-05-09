@@ -13,7 +13,7 @@ Moncomble, F. (2024). *RedditScraper* (Version 0.1) [JavaScript]. Arras, France:
 ### Firefox
 [![Firefox add-on](https://github.com/fmoncomble/Figaro_extractor/assets/59739627/e4df008e-1aac-46be-a216-e6304a65ba97)](https://github.com/fmoncomble/redditscraper/releases/latest/download/redditscraper.xpi)  
 ### Chrome/Edge
-Publication on the Chrome Webstore pending.
+[![available-chrome-web-store4321](https://github.com/fmoncomble/redditscraper/assets/59739627/dad5ba48-c049-4b76-8d37-cd1a01ba4107)](https://chrome.google.com/webstore/detail/pleejhomflbkocjhlpipghkgmoafpnok)
     
 Remember to pin the add-on to the toolbar.
  
