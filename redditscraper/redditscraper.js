@@ -1,4 +1,4 @@
-console.log('Mastocraper script loaded');
+console.log('Redditscraper script loaded');
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Declare page elements
@@ -608,7 +608,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         queryUrl =
             queryUrl + `&t=${timeRange}&sort=${sortBy}&type=${type}&limit=100`;
         queryUrl = encodeURI(queryUrl);
-        console.log('Query URL = ', queryUrl);
 
         // Fetch query response from server
         try {
@@ -793,7 +792,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                     },
                 });
                 if (userToken && response.status === 401) {
-                    renewToken();
+                    await renewToken();
+                    processPage();
                 } else if (response.status === 401) {
                     window.alert(
                         'Application not authorized: please authenticate with Reddit'
