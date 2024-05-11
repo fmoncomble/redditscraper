@@ -15,7 +15,7 @@
                 width="300"
                 fill="currentColor"
             />
-            <div id="version-div">v0.1.1</div>
+            <div id="version-div">v0.1.3</div>
         </div>
         <br />
         <!-- Authentication container -->
@@ -144,6 +144,14 @@
             </div>
             <br />
             <button id="search-btn" class="reddit-scraper">Search</button>
+            <div id="refresh-msg" style="display: none">
+                <div
+                    class="reddit-spinner"
+                    id="search-spinner"
+                    style="display: inline-block"
+                ></div>
+                Renewing authentication...
+            </div>
             <div id="search-msg" style="display: none">
                 <div
                     class="reddit-spinner"

@@ -473,6 +473,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Function to refresh user token
     async function renewToken() {
+        searchMsg.style.display = 'none';
+        const refreshMsg = document.getElementById('refresh-msg');
+        refreshMsg.style.display = 'block';
         refreshToken = await retrieveCredential('redditrefreshtoken');
 
         // Build query
@@ -508,6 +511,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 idContainer.style.display = 'none';
                 secretContainer.style.display = 'none';
                 authBtnContainer.style.display = 'none';
+                refreshMsg.style.display = 'none';
             } else {
                 window.alert('Could not renew access token');
                 throw new Error('Could not renew access token');
@@ -574,6 +578,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     let queryUrl;
 
     async function buildQueryUrl() {
+        searchMsg.style.display = 'block';
         queryUrl = 'https://oauth.reddit.com/';
 
         // Concatenate query URL from search elements
@@ -608,6 +613,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         queryUrl =
             queryUrl + `&t=${timeRange}&sort=${sortBy}&type=${type}&limit=100`;
         queryUrl = encodeURI(queryUrl);
+        console.log('Query URL = ', queryUrl);
 
         // Fetch query response from server
         try {
@@ -664,7 +670,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Assign role to search button
     searchBtn.addEventListener('click', () => {
         extractContainer.style.display = 'none';
-        searchMsg.style.display = 'block';
+        // searchMsg.style.display = 'block';
         noResult.style.display = 'none';
         buildQueryUrl();
     });
@@ -817,7 +823,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                     abort = true;
                 }
                 for (r of results) {
-                    const parser = new DOMParser();
                     id = r.data.id;
                     if (resultSet.has(id)) {
                         abort = true;
@@ -882,12 +887,14 @@ ${text}
 </result>
 <lb></lb><lb></lb>`;
                     } else if (fileFormat === 'txt') {
-                        file = file + `\n\n${text}`;
+                        file = file + `\n\nPost title: ${title}\n\n${text}`;
                     } else if (fileFormat === 'json') {
                         file[id] = {
                             username: `${username}`,
                             date: `${date}`,
                             time: `${time}`,
+                            url: `${url}`,
+                            title: `${title}`,
                             text: `${text}`,
                         };
                     } else if (fileFormat === 'csv') {
@@ -950,7 +957,7 @@ ${text}
         var url = window.URL.createObjectURL(myBlob);
         var anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download = `results.${fileFormat}`;
+        anchor.download = `reddit_results.${fileFormat}`;
         anchor.click();
         window.URL.revokeObjectURL(url);
     }
