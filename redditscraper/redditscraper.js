@@ -747,6 +747,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             file = '';
         } else if (fileFormat === 'csv') {
             csvData = [];
+        } else if (fileFormat === 'xlsx') {
+            file = XLSX.utils.book_new();
+            sheet = XLSX.utils.aoa_to_sheet([
+                ['Username', 'Date', 'Time', 'URL', 'Title', 'Text'],
+            ]);
         }
 
         let p = 1;
@@ -907,6 +912,9 @@ ${text}
                             title,
                             text,
                         });
+                    } else if (fileFormat === 'xlsx') {
+                        let row = [username, date, time, url, title, text];
+                        XLSX.utils.sheet_add_aoa(sheet, [row], { origin: -1 });
                     }
                     if (maxResults !== Infinity) {
                         let resultPercent = Math.round(
@@ -953,13 +961,18 @@ ${text}
             }
             const csvString = convertToCsv(csvData);
             var myBlob = new Blob([csvString], { type: 'text/csv' });
+        } else if (fileFormat === 'xlsx') {
+            XLSX.utils.book_append_sheet(file, sheet, 'Results');
+            XLSX.writeFile(file, 'reddit_results.xlsx');
         }
-        var url = window.URL.createObjectURL(myBlob);
-        var anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = `reddit_results.${fileFormat}`;
-        anchor.click();
-        window.URL.revokeObjectURL(url);
+        if (fileFormat !== 'xlsx') {
+            var url = window.URL.createObjectURL(myBlob);
+            var anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = `reddit_results.${fileFormat}`;
+            anchor.click();
+            window.URL.revokeObjectURL(url);
+        }
     }
 
     // Assign role to reset button
