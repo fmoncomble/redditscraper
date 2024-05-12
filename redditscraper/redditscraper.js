@@ -894,6 +894,7 @@ ${text}
                     } else if (fileFormat === 'txt') {
                         file = file + `\n\n${title}\n\n${text}\n\n——————`;
                     } else if (fileFormat === 'json') {
+                        text = text.replaceAll('\n', ' ');
                         file[id] = {
                             username: `${username}`,
                             date: `${date}`,
@@ -913,6 +914,7 @@ ${text}
                             text,
                         });
                     } else if (fileFormat === 'xlsx') {
+                        text = text.replaceAll('\n', ' ');
                         let row = [username, date, time, url, title, text];
                         XLSX.utils.sheet_add_aoa(sheet, [row], { origin: -1 });
                     }
