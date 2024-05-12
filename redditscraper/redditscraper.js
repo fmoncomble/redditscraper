@@ -892,7 +892,7 @@ ${text}
 </result>
 <lb></lb><lb></lb>`;
                     } else if (fileFormat === 'txt') {
-                        file = file + `\n\nPost title: ${title}\n\n${text}`;
+                        file = file + `\n\n${title}\n\n${text}\n\n——————`;
                     } else if (fileFormat === 'json') {
                         file[id] = {
                             username: `${username}`,
