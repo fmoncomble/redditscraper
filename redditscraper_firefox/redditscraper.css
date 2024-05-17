@@ -9,7 +9,7 @@ body {
     color: black;
     background-color: white;
     text-align: center;
-    font-family: 'mastodon-font-sans-serif', system-ui, sans-serif;
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     font-size: small;
     width: 500px;
     height: auto;
@@ -180,7 +180,7 @@ button#reset-auth {
 }
 
 label {
-    display: block;
+    display: inline-block;
 }
 
 input.reddit-scraper {
