@@ -278,3 +278,11 @@ p#dismiss {
     text-decoration: underline;
     cursor: pointer;
 }
+
+div#expert-search {
+    border-radius: 4px;
+    background-color: rgba(255, 236, 230, 0.5);
+    width: 329px;
+    margin-left: 85.5px;
+    margin-top: 5px;
+}
