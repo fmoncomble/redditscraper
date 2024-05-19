@@ -7,7 +7,7 @@ An extension for extracting and downloading Reddit posts for text mining and ana
 ### Cite this program
 If you use this extension for your research, please reference it as follows:  
   
-Moncomble, F. (2024). *RedditScraper* (Version 0.2) [JavaScript]. Arras, France: Université d'Artois. Available at: https://fmoncomble.github.io/redditscraper/
+Moncomble, F. (2024). *RedditScraper* (Version 0.4) [JavaScript]. Arras, France: Université d'Artois. Available at: https://fmoncomble.github.io/redditscraper/
 
 ## Installation
 ### Firefox
