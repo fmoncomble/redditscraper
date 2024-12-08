@@ -37,6 +37,10 @@
                 {
                     "version": "0.4.1",
                     "update_link": "https://github.com/fmoncomble/redditscraper/releases/download/v0.4.1/redditscraper.xpi"
+                },
+                {
+                    "version": "0.4.2",
+                    "update_link": "https://github.com/fmoncomble/redditscraper/releases/download/v0.4.2/redditscraper.xpi"
                 }
             ]
         }
