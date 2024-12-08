@@ -35,21 +35,21 @@ jobs:
         API_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
         curl -u "$API_KEY:$API_SECRET" \
-          -F "file=@addon.xpi" \
+          -F "file=@redditscraper_firefox.xpi" \
           -F "channel=unlisted" \
           https://addons.mozilla.org/api/v5/addons/signing/ \
           -o redditscraper.xpi
 
     - name: Update update_manifest.json
       run: |
-        jq --arg ts "$TIMESTAMP" '.addons[0].version = $ts' redditscraper_firefox/update_manifest.json > redditscraper_firefox/update_manifest.tmp.json
-        mv redditscraper_firefox/update_manifest.tmp.json redditscraper_firefox/update_manifest.json
+        jq --arg ts "$TIMESTAMP" '.addons[0].version = $ts' update_manifest.json > update_manifest.tmp.json
+        mv update_manifest.tmp.json update_manifest.json
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@v1
       with:
         files: |
           redditscraper.xpi
-          redditscraper_firefox/update_manifest.json
+          update_manifest.json
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
