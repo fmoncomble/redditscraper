@@ -1,0 +1,55 @@
+name: Sign and Release Firefox Add-on
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Update version in manifest
+      run: |
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        jq --arg ts "$TIMESTAMP" '.version += "-" + $ts' redditscraper_firefox/manifest.json > redditscraper_firefox/manifest.tmp.json
+        mv redditscraper_firefox/manifest.tmp.json redditscraper_firefox/manifest.json
+
+    - name: Create .xpi file
+      run: |
+        cd redditscraper_firefox
+        zip -r ../redditscraper_firefox.xpi *
+
+    - name: Sign .xpi file with Mozilla
+      env:
+        API_KEY: ${{ secrets.JWT_ISSUER }}
+        API_SECRET: ${{ secrets.JWT_SECRET }}
+      run: |
+        curl -u "$API_KEY:$API_SECRET" \
+          -F "file=@addon.xpi" \
+          -F "channel=unlisted" \
+          https://addons.mozilla.org/api/v5/addons/signing/ \
+          -o redditscraper.xpi
+
+    - name: Update update_manifest.json
+      run: |
+        jq --arg ts "$TIMESTAMP" '.addons[0].version = $ts' redditscraper_firefox/update_manifest.json > redditscraper_firefox/update_manifest.tmp.json
+        mv redditscraper_firefox/update_manifest.tmp.json redditscraper_firefox/update_manifest.json
+
+    - name: Create GitHub release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          redditscraper.xpi
+          redditscraper_firefox/update_manifest.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
